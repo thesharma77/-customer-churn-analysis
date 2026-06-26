@@ -1,50 +1,46 @@
-# Customer Churn Prediction — Telco Dataset
+Customer Churn Prediction — Telco Dataset
 
 This project came out of my SIP (Summer Internship Programme) work, where I had to figure out why telecom customers leave — and more importantly, which ones are about to.
 
 The dataset is IBM's Telco Customer Churn dataset. It has about 7,000 customer records with details like contract type, monthly charges, tenure, and whether they churned or not.
 
 ---
+What's inside
 
-## What's inside
-
-```
 -customer-churn-analysis/
 ├── notebooks/
 │   └── cbsot_churn_prediction.ipynb
 ├── README.md
 
 ---
+What I did, step by step
 
-## What I did, step by step
-
-### 1. Exploratory Data Analysis
+1. Exploratory Data Analysis
 Started by looking at the basics — tenure distribution, monthly charges, contract types. The boxplots made it pretty clear that customers who churn tend to have higher monthly bills and shorter tenures. Not shocking, but good to confirm before modelling.
-
-### 2. Data Cleaning
+ 2. Data Cleaning
 `Total Charges` had some null values hiding as empty strings. Converted to numeric, filled nulls with 0. Dropped columns that would either leak the target or weren't useful for prediction (CustomerID, city/state/zip, Churn Score, Churn Reason, CLTV).
 
-### 3. Encoding
+3. Encoding
 Used `pd.get_dummies` with `drop_first=True` to handle all the categorical columns (Internet Service, Contract, Payment Method, etc.).
 
-### 4. Modelling
+4. Modelling
 
-**Baseline — Random Forest**
+Baseline — Random Forest
 Started simple: 100 trees, max depth 3. Accuracy was decent but recall on churners was low. The dataset is imbalanced (~73% No, ~27% Yes), so accuracy alone was misleading.
 
-**Approach 1 — Balanced class weights**
+Approach 1 — Balanced class weights
 Added `class_weight='balanced'` to the Random Forest. Recall improved significantly on the churn class.
 
-**Approach 2 — Hyperparameter tuning**
+Approach 2 — Hyperparameter tuning
 Bumped trees to 300 and depth to 10. Ran a grid over `n_estimators = [100, 200, 300, 400, 500]` and `max_depth = [5, 10, 15, 20]`, sorting results by recall then accuracy. This helped identify the sweet spot.
 
-**Approach 3 — Feature importance**
+Approach 3 — Feature importance
 Pulled feature importances from the tuned model. Dropped two near-zero features (`Phone Service_Yes`, `Multiple Lines_No phone service`) and retrained. Marginal improvement, but cleaner model.
 
-**Approach 4 — XGBoost**
+Approach 4 — XGBoost
 Switched to XGBoost with `scale_pos_weight` to handle class imbalance natively. Also used 5-fold cross-validation to get a more honest picture of performance.
 
-### 5. Customer Segmentation
+5. Customer Segmentation
 Used the churn probabilities from the tuned RF model as a feature, combined with tenure, monthly charges, and total charges. Applied KMeans (k=3, chosen via elbow method) and got three segments:
 
 | Segment | Description |
@@ -57,7 +53,7 @@ Visualised each segment's churn probability against monthly charges, tenure, and
 
 ---
 
-## Results
+Results
 
 | Model | Accuracy | Recall (Churn) | ROC AUC |
 |---|---|---|---|
@@ -69,7 +65,7 @@ XGBoost edged out Random Forest on both recall and AUC. Given the business conte
 
 ---
 
-## Setup
+Setup
 
 ```bash
 pip install pandas numpy matplotlib seaborn scikit-learn xgboost openpyxl
@@ -85,7 +81,7 @@ The dataset path in the notebook points to `/content/Telco_customer_churn.xlsx` 
 
 ---
 
-## Notes
+Notes
 
 - The dataset isn't included in the repo (just add it to `/data/` and update the path).
 - Some cells are exploratory / iterative — the notebook isn't fully linear, a few approaches were tested in sequence.
@@ -93,7 +89,7 @@ The dataset path in the notebook points to `/content/Telco_customer_churn.xlsx` 
 
 ---
 
-## Tech used
+Tech used
 
 - Python 3
 - pandas, numpy
