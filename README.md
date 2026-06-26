@@ -9,15 +9,10 @@ The dataset is IBM's Telco Customer Churn dataset. It has about 7,000 customer r
 ## What's inside
 
 ```
-cbsot-churn-prediction/
+-customer-churn-analysis/
 ├── notebooks/
-│   └── cbsot_churn_prediction.ipynb   # main analysis notebook
-├── data/
-│   └── Telco_customer_churn.xlsx      # raw dataset (not tracked in git)
-├── src/                               # helper scripts (if any)
-├── outputs/                           # plots and results
-└── README.md
-```
+│   └── cbsot_churn_prediction.ipynb
+├── README.md
 
 ---
 
@@ -108,4 +103,4 @@ The dataset path in the notebook points to `/content/Telco_customer_churn.xlsx` 
 
 ---
 
-*SIP project — June 2026*
+
